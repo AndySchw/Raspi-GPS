@@ -1,0 +1,70 @@
+# GPS-Gerät Standard-Konfiguration
+
+# GPS-Modul (u-blox NEO-M8N mit Multi-GNSS)
+gps:
+  baudrate: 9600
+  port: "/dev/ttyS0"
+  update_rate: 1.0  # Hz (NEO-M8N unterstützt bis 10 Hz)
+  timeout: 30  # Sekunden für GPS-Fix
+  multi_gnss: true  # GPS + GLONASS + Galileo + BeiDou
+  external_antenna: true  # Externe Patch-Antenne
+
+# ePaper Display
+display:
+  update_interval: 2.0  # Sekunden zwischen Updates
+  full_refresh_every: 10  # Full-Refresh alle N Updates (verhindert Ghosting)
+  brightness: 100  # Prozent (falls unterstützt)
+
+# Navigation
+navigation:
+  step_length: 0.7  # Meter - durchschnittliche Schrittlänge
+  step_threshold: 1.2  # g - Min. Beschleunigung für Schritt
+  step_cooldown: 0.3  # Sekunden zwischen Schritten
+  magnetic_declination: 2.5  # Grad - für Standort Deutschland
+
+# Track-Logging (optimiert für 64GB SanDisk Extreme Pro)
+tracking:
+  log_interval: 5.0  # Sekunden zwischen Log-Einträgen (kann auf 1.0 für High-Detail)
+  log_directory: "data/tracks"
+  auto_save: true
+  gpx_export: true
+  high_detail_mode: false  # true = 1 Hz Logging (nutzt 64GB SD optimal)
+
+# Webserver
+web:
+  host: "0.0.0.0"  # 0.0.0.0 = alle Interfaces
+  port: 8080
+  enable: true
+  debug: false
+
+# Hardware-Einstellungen
+hardware:
+  enable_mock: false  # true = Mock-Modus für Tests ohne echte Hardware
+  i2c_bus: 1  # I²C Bus-Nummer (meist 1)
+
+  # I²C-Adressen
+  mpu9250_address: 0x68  # IMU
+  bmp180_address: 0x77   # Barometer
+
+  # GPIO-Pins
+  encoder_clk: 17
+  encoder_dt: 27
+  encoder_sw: 22
+  buzzer_pin: 22
+  dht11_pin: 4  # optional
+
+# Energiespar-Einstellungen (für 10000 mAh Powerbank)
+power:
+  display_sleep_after: 300  # Sekunden Inaktivität
+  gps_sleep_if_no_movement: true
+  low_power_mode: false  # true = 15-18h Laufzeit, false = 12-15h
+
+  # Powerbank-Spezifikationen (für Monitoring)
+  battery_capacity_mah: 10000
+  expected_runtime_hours: 12  # Konservative Schätzung
+
+# Benutzer-Einstellungen
+user:
+  units: "metric"  # metric oder imperial
+  coordinate_format: "decimal"  # decimal oder dms (Grad/Minuten/Sekunden)
+  language: "de"

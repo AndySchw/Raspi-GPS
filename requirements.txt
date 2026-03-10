@@ -1,0 +1,27 @@
+# GPS Outdoor Device - Python Dependencies
+
+# GPS
+gpsd-py3==0.3.0           # GPS-Daemon Interface
+pyserial==3.5             # UART/Serial Kommunikation
+
+# Display
+Pillow==10.1.0            # Bildverarbeitung für ePaper
+# Waveshare ePaper Library wird später manuell installiert
+
+# Sensoren
+smbus2==0.4.3             # I²C Kommunikation
+RPi.GPIO==0.7.1           # GPIO-Zugriff (nur auf Pi)
+
+# Navigation & Mathematik
+numpy==1.24.3             # Numerische Berechnungen
+
+# Webserver
+Flask==3.0.0              # Webinterface für Track-Download
+Flask-CORS==4.0.0         # CORS für API
+
+# Datenformate
+gpxpy==1.6.1              # GPX-Format für Track-Export
+PyYAML==6.0.1             # YAML-Konfigurationsdateien
+
+# Utilities
+python-dotenv==1.0.0      # .env File Unterstützung

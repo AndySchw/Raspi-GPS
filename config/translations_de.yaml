@@ -1,0 +1,196 @@
+# Deutsche Übersetzungen für GPS-Gerät
+
+# Koordinaten
+coordinates:
+  latitude: "Breite"
+  longitude: "Länge"
+  altitude: "Höhe"
+  altitude_suffix: "m ü.NN"  # über Normal-Null
+  speed: "Geschw"
+  accuracy: "Genauigkeit"
+
+# Himmelsrichtungen
+directions:
+  north: "Nord"
+  northeast: "Nordost"
+  east: "Ost"
+  southeast: "Südost"
+  south: "Süd"
+  southwest: "Südwest"
+  west: "West"
+  northwest: "Nordwest"
+
+  # Abkürzungen
+  n: "N"
+  ne: "NO"
+  e: "O"    # Ost, nicht E!
+  se: "SO"
+  s: "S"
+  sw: "SW"
+  w: "W"
+  nw: "NW"
+
+# Navigation
+navigation:
+  to_target: "Zum Ziel"
+  distance: "Entfernung"
+  bearing: "Richtung"
+  direction: "Blickrichtung"
+  progress: "Fortschritt"
+  eta: "Geschätzt"
+  target: "Ziel"
+  arrival: "Ankunft"
+
+# Tracking
+tracking:
+  recording: "Aufzeichnung"
+  duration: "Dauer"
+  distance: "Strecke"
+  steps: "Schritte"
+  ascent: "Aufstieg"
+  descent: "Abstieg"
+  avg_speed: "Ø Tempo"
+  max_altitude: "Max. Höhe"
+  min_altitude: "Min. Höhe"
+
+  # Buttons
+  start: "Start"
+  pause: "Pause"
+  stop: "Stop"
+  save: "Speichern"
+  resume: "Fortsetzen"
+
+# GPS
+gps:
+  satellites: "Satelliten"
+  no_fix: "Kein Fix"
+  acquiring: "Suche Satelliten..."
+  fixed: "Fix OK"
+  signal_quality: "Signalqualität"
+
+  # GNSS-Systeme
+  gps_short: "GPS"
+  glonass: "GLO"
+  galileo: "GAL"
+  beidou: "BDS"
+
+# Zeit & Datum
+time:
+  today: "Heute"
+  yesterday: "Gestern"
+  days: "Tage"
+  hours: "Stunden"
+  minutes: "Minuten"
+  seconds: "Sekunden"
+
+  # Abkürzungen
+  h: "Std"
+  min: "Min"
+  sec: "Sek"
+
+# Statistiken
+stats:
+  title: "Statistiken"
+  tours: "Touren"
+  total_distance: "Gesamt-Strecke"
+  avg_per_tour: "Ø pro Tour"
+  last_7_days: "Letzte 7 Tage"
+  last_30_days: "Letzte 30 Tage"
+  all_time: "Gesamt (alle Zeiten)"
+  longest_tour: "Längste Tour"
+  highest_point: "Höchster Punkt"
+
+# Einstellungen
+settings:
+  title: "Einstellungen"
+  coordinate_format: "Koordinaten-Format"
+  decimal: "Dezimal"
+  dms: "Grad/Min/Sek"
+
+  display_update: "Display-Update"
+  2_sec: "2 Sek"
+  5_sec: "5 Sek"
+  10_sec: "10 Sek"
+
+  power_mode: "Energie-Modus"
+  normal: "Normal"
+  eco: "Sparsam"
+  ultra: "Ultra-Spar"
+
+  brightness: "Helligkeit"
+  language: "Sprache"
+  german: "Deutsch"
+  english: "Englisch"
+
+  units: "Einheiten"
+  metric: "Metrisch"
+  imperial: "Imperial"
+
+  # Buttons
+  back: "Zurück"
+  save: "Speichern"
+  cancel: "Abbrechen"
+  reset: "Zurücksetzen"
+
+# Kompass
+compass:
+  title: "Kompass"
+  heading: "Richtung"
+  magnetic: "Magnetisch"
+  true_north: "Geogr. Nord"
+  calibrating: "Kalibriere..."
+  calibration_needed: "Kalibrierung nötig"
+
+# Karte
+map:
+  title: "Karte"
+  zoom: "Zoom"
+  loading: "Lade Karte..."
+  no_map_data: "Keine Kartendaten"
+  offline: "Offline"
+  position: "Position"
+  scale: "Maßstab"
+
+# Menü
+menu:
+  main_menu: "Hauptmenü"
+  gps_status: "GPS"
+  navigation: "Navigation"
+  compass: "Kompass"
+  tracking: "Tracking"
+  map: "Karte"
+  statistics: "Statistiken"
+  settings: "Einstellungen"
+  altitude_profile: "Höhenprofil"
+
+# Fehler & Warnungen
+errors:
+  gps_timeout: "GPS-Timeout"
+  no_satellites: "Keine Satelliten"
+  sensor_error: "Sensor-Fehler"
+  save_failed: "Speichern fehlgeschlagen"
+  low_battery: "Akku schwach"
+  sd_full: "SD-Karte voll"
+
+# Bestätigungen
+confirmations:
+  save_track: "Track speichern?"
+  delete_track: "Track löschen?"
+  reset_stats: "Statistiken zurücksetzen?"
+  shutdown: "Gerät ausschalten?"
+
+  yes: "Ja"
+  no: "Nein"
+
+# Einheiten
+units:
+  meter: "m"
+  kilometer: "km"
+  meter_per_second: "m/s"
+  kilometer_per_hour: "km/h"
+  degree: "°"
+  percent: "%"
+
+  meter_short: "m"
+  km_short: "km"
+  kmh: "km/h"
