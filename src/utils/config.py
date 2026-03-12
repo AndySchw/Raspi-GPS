@@ -27,6 +27,18 @@ class Config:
         self.config_file = Path(config_file)
         self.config: Dict[str, Any] = {}
         self.load()
+        self._load_hardware_pins()
+
+    def _load_hardware_pins(self):
+        """Lädt Hardware-Pin-Konfiguration und merged sie in config"""
+        pins_file = Path("config/hardware_pins.yaml")
+        if pins_file.exists():
+            with open(pins_file, 'r', encoding='utf-8') as f:
+                pins_config = yaml.safe_load(f) or {}
+                # Merge pins in hardware section
+                if 'hardware' not in self.config:
+                    self.config['hardware'] = {}
+                self.config['hardware']['pins'] = pins_config
 
     def load(self):
         """Lädt Konfiguration aus YAML-Datei"""

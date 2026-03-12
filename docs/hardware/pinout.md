@@ -68,9 +68,9 @@ GPIO11/SCLK(23)(24) GPIO8/CE0
 ---
 
 ### GPIO (Drehencoder)
-- **GPIO17** (Pin 11) → CLK (Clock/A)
+- **GPIO5** (Pin 29) → CLK (Clock/A)
 - **GPIO27** (Pin 13) → DT (Data/B)
-- **GPIO22** (Pin 15) → SW (Switch/Button) mit Pull-Up
+- **GPIO6** (Pin 31) → SW (Switch/Button) mit Pull-Up
 - **GND** (Pin 14) → GND
 
 **Hinweis:** Drehencoder nutzt interne Pull-Up-Widerstände des Pi.
@@ -105,8 +105,10 @@ GPIO11/SCLK(23)(24) GPIO8/CE0
 | GPIO8 | 24 | SPI CE0 | ePaper Display | CS |
 | GPIO25 | 22 | GPIO | ePaper Display | DC |
 | GPIO24 | 18 | GPIO | ePaper Display | RST |
-| GPIO17 | 11 | GPIO | Drehencoder | CLK |
+| GPIO17 | 11 | GPIO | ePaper Display | BUSY |
+| GPIO5 | 29 | GPIO | Drehencoder | CLK |
 | GPIO27 | 13 | GPIO | Drehencoder | DT |
+| GPIO6 | 31 | GPIO | Drehencoder | SW |
 | GPIO22 | 15 | GPIO | Buzzer | Signal |
 | GPIO4 | 7 | GPIO | DHT11 (optional) | Data |
 
