@@ -1,0 +1,57 @@
+# GPIO Pin-Konfiguration für DIY GPS-Gerät
+# Raspberry Pi Zero 2 W
+#
+# WICHTIG: Diese Datei definiert die Hardware-Pin-Belegung
+# Alle Hardware-Module nutzen diese Konfiguration
+
+# I²C Bus (MPU-9250 IMU, BMP180 Barometer)
+i2c:
+  bus: 1  # I2C Bus 1 auf Pi Zero 2 W
+  sda_gpio: 2  # GPIO2 (Pin 3)
+  scl_gpio: 3  # GPIO3 (Pin 5)
+  devices:
+    mpu9250_address: 0x68
+    bmp180_address: 0x77
+
+# UART (GPS NEO-M8N)
+uart:
+  port: "/dev/ttyS0"
+  baudrate: 9600
+  txd_gpio: 14  # GPIO14 (Pin 8) → geht zu GPS RX
+  rxd_gpio: 15  # GPIO15 (Pin 10) → geht zu GPS TX
+
+# SPI (2.9" ePaper Display)
+spi:
+  bus: 0
+  device: 0
+  mosi_gpio: 10  # GPIO10 (Pin 19) - DIN
+  miso_gpio: 9   # GPIO9 (Pin 21) - nicht genutzt bei ePaper
+  sclk_gpio: 11  # GPIO11 (Pin 23) - CLK
+  ce0_gpio: 8    # GPIO8 (Pin 24) - CS
+  dc_gpio: 25    # GPIO25 (Pin 22) - Data/Command
+  rst_gpio: 24   # GPIO24 (Pin 18) - Reset
+  busy_gpio: 17  # GPIO17 (Pin 11) - Busy Status
+
+# GPIO (Drehencoder)
+rotary_encoder:
+  clk_gpio: 5   # GPIO5 (Pin 29) - Clock/A
+  dt_gpio: 27   # GPIO27 (Pin 13) - Data/B
+  sw_gpio: 6    # GPIO6 (Pin 31) - Switch/Button
+  pull_up: true # Interne Pull-Up Widerstände nutzen
+
+# GPIO (Buzzer - Passiver Piezo)
+buzzer:
+  signal_gpio: 22  # GPIO22 (Pin 15)
+  pwm_frequency: 2000  # Hz - Standard-Piepston
+  duty_cycle: 50  # Prozent
+
+# GPIO (Optional: DHT11 Temperatur/Luftfeuchte)
+dht11:
+  enabled: false
+  data_gpio: 4  # GPIO4 (Pin 7)
+
+# Stromversorgung (zur Dokumentation)
+power:
+  vcc_3v3_pins: [1, 17]  # Pin 1 und Pin 17
+  vcc_5v_pins: [2, 4]    # Pin 2 und Pin 4 (NICHT NUTZEN!)
+  gnd_pins: [6, 9, 14, 20, 25, 30, 34, 39]
