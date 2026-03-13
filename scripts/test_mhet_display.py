@@ -172,14 +172,14 @@ class GDEW029Z10:
         self.send_command(0x24)
         black_bytes = black_image.tobytes()
         for i in range(len(black_bytes)):
-            self.send_data(~black_bytes[i] & 0xFF)  # Invertieren
+            self.send_data(black_bytes[i])  # NICHT invertieren
 
         # Rot-Daten senden
         print("  Sende Rot-Buffer...")
         self.send_command(0x26)
         red_bytes = red_image.tobytes()
         for i in range(len(red_bytes)):
-            self.send_data(~red_bytes[i] & 0xFF)  # Invertieren
+            self.send_data(red_bytes[i])  # NICHT invertieren
 
         self.turn_on_display()
 
