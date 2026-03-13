@@ -53,17 +53,24 @@ GPIO11/SCLK(23)(24) GPIO8/CE0
 
 ---
 
-### SPI (2.9" ePaper Display)
-- **GPIO10** (Pin 19) → MOSI/DIN (Master Out Slave In)
-- **GPIO11** (Pin 23) → SCLK/CLK (Clock)
-- **GPIO8** (Pin 24) → CE0/CS (Chip Select)
-- **GPIO25** (Pin 22) → DC (Data/Command)
+### SPI (2.9" ePaper Display - MH-ET LIVE, GDEW029Z10)
+- **GPIO10** (Pin 19) → SDI/MOSI (Master Out Slave In)
+- **GPIO11** (Pin 23) → SCLK (Clock)
+- **GPIO8** (Pin 24) → CS (Chip Select)
+- **GPIO25** (Pin 22) → D/C (Data/Command)
 - **GPIO24** (Pin 18) → RST (Reset)
-- **GPIO17** (Pin 11) → BUSY (optional, für Status)
+- **GPIO17** (Pin 11) → BUSY (Status)
+
+**Display-Typ:** 3-Farben ePaper (Schwarz/Weiß/Rot), 296x128 Pixel
+**Treiber:** GxEPD2_290_C90c (GxEPD2 Library)
+**BS Interface:** 4-line SPI (Schalter-Position)
 
 **Stromversorgung Display:**
 - **3.3V** (Pin 17) → VCC
 - **GND** (Pin 20) → GND
+
+**WICHTIG:** Dieses Display nutzt NICHT die Standard-Waveshare-Library!
+Verwende stattdessen die GxEPD2-Library mit dem GxEPD2_290_C90c-Treiber.
 
 ---
 
