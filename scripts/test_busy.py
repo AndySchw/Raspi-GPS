@@ -25,6 +25,12 @@ RAM_WIDTH = 128
 RAM_HEIGHT = 296
 
 class EPD29:
+    def set_cursor(self, x_byte=0, y=0):
+        self.cmd(0x4E)                  # Set RAM X address counter
+        self.data(x_byte)
+        self.cmd(0x4F)                  # Set RAM Y address counter
+        self.data([y & 0xFF, (y >> 8) & 0xFF])
+
     def __init__(self):
         GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(False)
@@ -47,12 +53,7 @@ class EPD29:
         if isinstance(d, int):
             self.spi.xfer2([d])
         else:
-            self.send_data_chunked(d)
-
-    def send_data_chunked(self, data, chunk_size=1024):
-        data_list = list(data)
-        for i in range(0, len(data_list), chunk_size):
-            self.spi.xfer2(data_list[i:i + chunk_size])
+            self.spi.xfer2(list(d))
 
     def reset(self):
         GPIO.output(RST_PIN, 0)
@@ -145,11 +146,17 @@ class EPD29:
         if not self.init():
             return False
 
+        # Schwarz-Buffer schreiben
+        self.set_cursor(0, 0)
         self.cmd(0x24)
-        self.data(black_buf)
+        for b in black_buf:
+            self.data(b)
 
+        # Rot-Buffer schreiben
+        self.set_cursor(0, 0)
         self.cmd(0x26)
-        self.data(red_buf)
+        for b in red_buf:
+            self.data(b)
 
         return self.refresh()
 
