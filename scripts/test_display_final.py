@@ -1,89 +1,186 @@
 #!/usr/bin/env python3
 """
-Finaler Display-Test mit GPS-Motiv
-Zeigt "GPS ANDY" in Schwarz/Rot
+FINALER TEST - Befehle 0x24/0x26/0x20 funktionieren!
+Jetzt mit PIL und richtiger Bildanordnung
 """
-import sys
-sys.path.append('/home/gpsandy/gps_device/lib')
-from waveshare_epd import epd2in9b_V4
-from PIL import Image, ImageDraw, ImageFont
+
 import time
+import spidev
+import RPi.GPIO as GPIO
+from PIL import Image, ImageDraw, ImageFont
+
+RST_PIN = 24
+DC_PIN = 25
+CS_PIN = 8
+BUSY_PIN = 17
+
+# Display ist vermutlich 128x296 (Hochformat)
+EPD_WIDTH = 128
+EPD_HEIGHT = 296
 
 print("="*60)
-print("GPS-GERÄT DISPLAY TEST")
+print("FINALER DISPLAY TEST")
+print("="*60)
+print(f"Auflösung: {EPD_WIDTH}x{EPD_HEIGHT}")
+print("Befehle: 0x24/0x26/0x20 (funktionieren!)")
 print("="*60)
 
-# Monkey-Patch für BUSY
-def dummy_readbusy(self):
-    time.sleep(0.3)
+class FinalEPD:
+    def __init__(self):
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setwarnings(False)
+        GPIO.setup(RST_PIN, GPIO.OUT)
+        GPIO.setup(DC_PIN, GPIO.OUT)
+        GPIO.setup(CS_PIN, GPIO.OUT)
+        GPIO.setup(BUSY_PIN, GPIO.IN)
 
-epd2in9b_V4.EPD.ReadBusy = dummy_readbusy
+        self.spi = spidev.SpiDev()
+        self.spi.open(0, 0)
+        self.spi.max_speed_hz = 2000000
+        self.spi.mode = 0
 
-print("\n1. Init Display...")
-epd = epd2in9b_V4.EPD()
-epd.init()
-print("   ✅ OK")
+        self.width = EPD_WIDTH
+        self.height = EPD_HEIGHT
 
-print("\n2. Clear Display (dauert ~15 Sekunden)...")
-epd.Clear()
-time.sleep(15)  # Warte länger für vollständiges Clear
-print("   ✅ OK - Display sollte jetzt WEIß sein")
+    def cmd(self, c):
+        GPIO.output(DC_PIN, 0)
+        GPIO.output(CS_PIN, 0)
+        self.spi.xfer2([c])
+        GPIO.output(CS_PIN, 1)
 
-print("\n3. Erstelle GPS-Bild...")
+    def data(self, d):
+        GPIO.output(DC_PIN, 1)
+        GPIO.output(CS_PIN, 0)
+        if isinstance(d, int):
+            d = [d]
+        self.spi.xfer2(d)
+        GPIO.output(CS_PIN, 1)
 
-# 128 (höhe) x 296 (breite) - Display ist gedreht
-black_img = Image.new('1', (128, 296), 255)
-red_img = Image.new('1', (128, 296), 255)
+    def reset(self):
+        print("\n1. Hardware Reset...")
+        GPIO.output(RST_PIN, 0)
+        time.sleep(0.2)
+        GPIO.output(RST_PIN, 1)
+        time.sleep(0.5)
 
-draw_black = ImageDraw.Draw(black_img)
-draw_red = ImageDraw.Draw(red_img)
+    def clear_white(self):
+        print("\n2. Lösche Display (weiß)...")
+        self.reset()
 
-# Fonts
+        # Schwarz-Buffer: alles weiß
+        self.cmd(0x24)
+        for i in range(int(self.width * self.height / 8)):
+            self.data(0xFF)
+
+        # Rot-Buffer: kein Rot
+        self.cmd(0x26)
+        for i in range(int(self.width * self.height / 8)):
+            self.data(0x00)
+
+        # Update
+        self.cmd(0x20)
+        print("   Warte 10 Sekunden...")
+        time.sleep(10)
+        print("   ✅ Sollte weiß sein!")
+
+    def show_test_image(self):
+        print("\n3. Erstelle Testbild mit PIL...")
+
+        # Erstelle Bild 128x296
+        black_img = Image.new('1', (self.width, self.height), 255)
+        red_img = Image.new('1', (self.width, self.height), 255)
+
+        draw_black = ImageDraw.Draw(black_img)
+        draw_red = ImageDraw.Draw(red_img)
+
+        # GROSSER schwarzer Rahmen
+        draw_black.rectangle((0, 0, self.width-1, self.height-1), outline=0, width=5)
+
+        # Schwarze Box oben
+        draw_black.rectangle((20, 20, 108, 80), fill=0)
+
+        # Rote Box Mitte
+        draw_red.rectangle((20, 110, 108, 170), fill=0)
+
+        # Schwarze Box unten
+        draw_black.rectangle((20, 200, 60, 240), fill=0)
+
+        # Rote Box unten rechts
+        draw_red.rectangle((68, 200, 108, 240), fill=0)
+
+        # Text
+        try:
+            font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', 24)
+        except:
+            font = ImageFont.load_default()
+
+        draw_black.text((25, 260), "GPS", font=font, fill=0)
+
+        print("   ✅ Bild erstellt: 128x296")
+
+        print("\n4. Sende Bilddaten...")
+        self.reset()
+
+        # Schwarz-Buffer
+        self.cmd(0x24)
+        black_bytes = black_img.tobytes()
+        print(f"   Schwarz: {len(black_bytes)} Bytes")
+        for byte in black_bytes:
+            self.data(byte)
+
+        # Rot-Buffer
+        self.cmd(0x26)
+        red_bytes = red_img.tobytes()
+        print(f"   Rot: {len(red_bytes)} Bytes")
+        for byte in red_bytes:
+            self.data(byte)
+
+        # Update
+        print("\n5. Display Update...")
+        self.cmd(0x20)
+
+        print("   Warte 10 Sekunden...")
+        for i in range(10, 0, -1):
+            print(f"   {i}...", end='\r', flush=True)
+            time.sleep(1)
+
+        print("\n   ✅ Fertig!")
+
+    def sleep(self):
+        print("\n6. Sleep...")
+        # Kein spezieller Sleep-Befehl nötig
+
+
 try:
-    font_huge = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', 40)
-    font_large = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', 28)
-except:
-    font_huge = ImageFont.load_default()
-    font_large = ImageFont.load_default()
+    print("\n⚠️  Nutzt funktionierende Befehle: 0x24/0x26/0x20\n")
 
-# Großer schwarzer Rahmen
-draw_black.rectangle((2, 2, 126, 294), outline=0, width=3)
+    epd = FinalEPD()
+    epd.clear_white()
+    time.sleep(2)
+    epd.show_test_image()
+    epd.sleep()
 
-# Text SCHWARZ
-draw_black.text((20, 40), "GPS", font=font_huge, fill=0)
+    print("\n" + "="*60)
+    print("✅ TEST ABGESCHLOSSEN")
+    print("="*60)
+    print("\nDu solltest sehen:")
+    print("  - Schwarzer Rahmen um alles")
+    print("  - Schwarze Box oben")
+    print("  - ROTE Box Mitte")
+    print("  - Schwarze + Rote Box unten")
+    print("  - Text 'GPS' unten")
+    print("\nWO siehst du diese Sachen?")
+    print("Sind sie an der richtigen Stelle oder verdreht?")
+    print("="*60)
 
-# Text ROT
-draw_red.text((15, 110), "ANDY", font=font_large, fill=0)
+    GPIO.cleanup()
 
-# Kleine schwarze Box als Marker
-draw_black.rectangle((10, 200, 50, 240), fill=0)
+except KeyboardInterrupt:
+    print("\n\nAbgebrochen")
+    GPIO.cleanup()
 
-# Kleine rote Box als Marker
-draw_red.rectangle((70, 200, 110, 240), fill=0)
-
-print("   ✅ Bild erstellt")
-
-print("\n4. Sende an Display (dauert ~20 Sekunden)...")
-epd.display(epd.getbuffer(black_img), epd.getbuffer(red_img))
-
-print("\n5. Warte auf Display-Refresh...")
-print("   Das Display sollte jetzt blinken/flackern!")
-print("   Das ist normal bei ePaper!")
-
-for i in range(20, 0, -1):
-    print(f"   Noch {i} Sekunden...", end='\r', flush=True)
-    time.sleep(1)
-
-print("\n\n6. Sleep...")
-epd.sleep()
-
-print("\n" + "="*60)
-print("FERTIG!")
-print("="*60)
-print("\nDu solltest jetzt sehen:")
-print("  - Schwarzen Rahmen")
-print("  - 'GPS' in SCHWARZ (groß)")
-print("  - 'ANDY' in ROT")
-print("  - Eine schwarze und eine rote Box unten")
-print("\nDas Bild bleibt auch beim Ausschalten!")
-print("="*60)
+except Exception as e:
+    print(f"\n❌ Fehler: {e}")
+    import traceback
+    traceback.print_exc()
+    GPIO.cleanup()
