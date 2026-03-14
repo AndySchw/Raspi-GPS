@@ -47,7 +47,12 @@ class EPD29:
         if isinstance(d, int):
             self.spi.xfer2([d])
         else:
-            self.spi.xfer2(list(d))
+            self.send_data_chunked(d)
+
+    def send_data_chunked(self, data, chunk_size=1024):
+        data_list = list(data)
+        for i in range(0, len(data_list), chunk_size):
+            self.spi.xfer2(data_list[i:i + chunk_size])
 
     def reset(self):
         GPIO.output(RST_PIN, 0)
