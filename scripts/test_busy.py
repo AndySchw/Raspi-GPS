@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import time
 import RPi.GPIO as GPIO
 
@@ -11,18 +12,24 @@ GPIO.setup(RST_PIN, GPIO.OUT)
 GPIO.setup(DC_PIN, GPIO.OUT)
 GPIO.setup(BUSY_PIN, GPIO.IN)
 
-print("BUSY vor Reset:", GPIO.input(BUSY_PIN))
-
-GPIO.output(RST_PIN, 0)
-time.sleep(0.2)
-print("BUSY waehrend Reset low:", GPIO.input(BUSY_PIN))
-
 GPIO.output(RST_PIN, 1)
-time.sleep(0.2)
-print("BUSY nach Reset high:", GPIO.input(BUSY_PIN))
+GPIO.output(DC_PIN, 1)
 
+print("Starte Pin-Test...")
 for i in range(20):
-    print("BUSY", i, "=", GPIO.input(BUSY_PIN))
+    print(f"{i:02d} BUSY={GPIO.input(BUSY_PIN)}")
+    time.sleep(0.2)
+
+print("RST LOW")
+GPIO.output(RST_PIN, 0)
+for i in range(10):
+    print(f"RST low {i:02d} BUSY={GPIO.input(BUSY_PIN)}")
+    time.sleep(0.2)
+
+print("RST HIGH")
+GPIO.output(RST_PIN, 1)
+for i in range(20):
+    print(f"RST high {i:02d} BUSY={GPIO.input(BUSY_PIN)}")
     time.sleep(0.2)
 
 GPIO.cleanup()
