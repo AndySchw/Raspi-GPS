@@ -2,9 +2,9 @@
 import time
 import RPi.GPIO as GPIO
 
-RST_PIN = 24
+RST_PIN = 17
 DC_PIN = 25
-BUSY_PIN = 17
+BUSY_PIN = 24
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
