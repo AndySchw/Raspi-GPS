@@ -219,11 +219,12 @@ try:
     print("TESTE MIT BUSY VARIANTE A (0=busy)")
     print("="*60)
 
-    epd.clear_white('A')
+    # TESTE BUSY VARIANTE B!
+    epd.clear_white('B')
     time.sleep(2)
-    epd.test_black_bar('A')
+    epd.test_black_bar('B')
     time.sleep(2)
-    epd.test_red_bar('A')
+    epd.test_red_bar('B')
 
     print("\n" + "="*60)
     print("✅ TESTS ABGESCHLOSSEN")
